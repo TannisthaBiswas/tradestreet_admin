@@ -1,0 +1,147 @@
+.addproduct {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 800px;
+  padding: 30px 50px;
+  margin: 20px 30px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.addproduct-itemfield {
+  width: 100%;
+  color: #7b7b7b;
+  font-size: 16px;
+}
+
+.addproduct-itemfield input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  border-radius: 4px;
+  padding-left: 15px;
+  border: 1px solid #c3c3c3;
+  outline: none;
+  color: #7b7b7b;
+  font-family: Poppins;
+  font-size: 14px;
+}
+
+.addproduct-price {
+  display: flex;
+  gap: 40px;
+}
+
+.add-product-selector {
+  padding: 10px 10px;
+  width: 100px;
+  height: 50px;
+  font-size: 14px;
+  color: #7b7b7b;
+  border: 1px solid #7b7b7b8d;
+  border-radius: 4px;
+}
+
+.addproduct-itemfield div {
+  display: flex;
+  width: 25%;
+}
+
+.addproduct-thumbnail-img {
+  height: 120px;
+  width: 120px;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.addproduct-itemfield div img {
+  margin-left: -30px;
+}
+
+.addproduct-btn {
+  margin-top: 40px;
+  width: 160px;
+  height: 50px;
+  border-radius: 6px;
+  background: #6079ff;
+  border: none;
+  cursor: pointer;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@media(max-width:800px) {
+  .addproduct {
+    width: auto;
+    padding: 30px;
+    margin: 20px 20px;
+  }
+}
+
+.size-quantity-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.size-quantity-field select {
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.size-quantity-field .quantity-field {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-field input[type="number"] {
+  width: 60px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.quantity-field button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.quantity-field button:hover {
+  background-color: #eee;
+}
+
+.size-quantity-field button {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.size-quantity-field button:hover {
+  background-color: #eee;
+}
+
+.size-quantity-field input[type="number"]::-webkit-outer-spin-button,
+.size-quantity-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
+  margin: 0;
+}
+.size-quantity-field .remove-button {
+  padding: 5px 10px;
+  margin-left: 140px;
+  border: 1px solid #ff4d4d;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.size-quantity-field .remove-button:hover {
+  background-color: #ff1a1a;
+}
