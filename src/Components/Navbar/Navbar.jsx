@@ -6,7 +6,7 @@ import navprofileIcon from '../Assets/nav-profile.svg'
 const Navbar = () => {
   return (
     <div className='navbar'>
-      <img src={navlogo} className='nav-logo' alt="" />
+      <h1>Tradesteet Admin Panel</h1>
     </div>
   )
 }
