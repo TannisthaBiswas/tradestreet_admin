@@ -1,195 +1,191 @@
 import React, { useState } from "react";
 import "./AddProduct.css";
-import upload_area from "../Assets/upload_area.svg";
 import { backend_url } from "../../App";
 
-const AddProduct = () => {
-
-  const [image, setImage] = useState(false);
-  const [productDetails, setProductDetails] = useState({
+export default function ProductUpload() {
+  const [product, setProduct] = useState({
     name: "",
     description: "",
-    image: "",
-    category: "women",
+    category: "",
     new_price: "",
     old_price: "",
-    sizes: [{ name: '', quantity: 0 }],
+    colour: "",
+    sizes: [{ name: "", quantity: 0 }],
+    images: [],
   });
 
-  const AddProduct = async () => {
+  const [previewImages, setPreviewImages] = useState([]);
 
-    let dataObj;
-    let product = productDetails;
-
-    let formData = new FormData();
-    formData.append('product', image);
-
-    await fetch(`${backend_url}/upload`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
-      body: formData,
-    }).then((resp) => resp.json())
-      .then((data) => { dataObj = data });
-
-    if (dataObj.success) {
-      product.image = dataObj.image_url;
-      await fetch(`${backend_url}/addproduct`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(product),
-      })
-        .then((resp) => resp.json())
-        .then((data) => { data.success ? alert("Product Added") : alert("Failed") });
-
-    }
-  }
-
-  const changeHandler = (e) => {
-    setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
-  }
-  
- 
-  const sizeChangeHandler = (e, index) => {
-    const { name, value } = e.target;
-    const newSizes = productDetails.sizes.map((size, idx) => {
-      if (index === idx) {
-        return { ...size, [name]: value };
-      }
-      return size;
-    });
-    setProductDetails({ ...productDetails, sizes: newSizes });
+  // Handle file selection for image upload
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      images: [...prevProduct.images, ...files],
+    }));
+    setPreviewImages((prevImages) => [
+      ...prevImages,
+      ...files.map((file) => URL.createObjectURL(file)),
+    ]);
   };
 
+  // Handle input change for text fields
+  const handleChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  // Handle size changes dynamically
+  const handleSizeChange = (index, field, value) => {
+    const updatedSizes = [...product.sizes];
+    updatedSizes[index][field] = field === "quantity" ? Number(value) : value;
+    setProduct({ ...product, sizes: updatedSizes });
+  };
+
+  // Add new size field
   const addSizeField = () => {
-    setProductDetails({
-      ...productDetails,
-      sizes: [...productDetails.sizes, { name: '', quantity: '' }],
-    });
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      sizes: [...prevProduct.sizes, { name: "", quantity: 0 }],
+    }));
   };
 
+  // Remove size field
   const removeSizeField = (index) => {
-    const newSizes = productDetails.sizes.filter((_, idx) => index !== idx);
-    setProductDetails({ ...productDetails, sizes: newSizes });
-  };
-  const increaseQuantity = (index) => {
-    const newSizes = productDetails.sizes.map((size, idx) => {
-      if (index === idx) {
-        return { ...size, quantity: parseInt(size.quantity) + 1 };
-      }
-      return size;
-    });
-    setProductDetails({ ...productDetails, sizes: newSizes });
+    const updatedSizes = [...product.sizes];
+    updatedSizes.splice(index, 1);
+    setProduct({ ...product, sizes: updatedSizes });
   };
 
-  const decreaseQuantity = (index) => {
-    const newSizes = productDetails.sizes.map((size, idx) => {
-      if (index === idx && size.quantity > 0) {
-        return { ...size, quantity: parseInt(size.quantity) - 1 };
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    Object.keys(product).forEach((key) => {
+      if (key === "images") {
+        product.images.forEach((image) => formData.append("images", image));
+      } else if (key === "sizes") {
+        product.sizes.forEach((size, index) => {
+          formData.append(`sizes[${index}][name]`, size.name);
+          formData.append(`sizes[${index}][quantity]`, size.quantity);
+        });
+      } else {
+        formData.append(key, product[key]);
       }
-      return size;
     });
-    setProductDetails({ ...productDetails, sizes: newSizes });
+
+    try {
+      const res = await fetch(`${backend_url}/addproduct`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Failed to upload product");
+      const data = await res.json();
+      alert("Product added successfully!");
+      console.log(data);
+    } catch (error) {
+      console.error("Error uploading product:", error);
+      alert("Upload failed");
+    }
   };
+
   return (
     <div className="addproduct">
+     <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="addproduct-itemfield">
+    <p>Product Title</p>
+    <input type="text" name="name" placeholder="Product Name" onChange={handleChange}  />
+    </div>
       <div className="addproduct-itemfield">
-        <p>Product title</p>
-        <input type="text" name="name" value={productDetails.name} onChange={(e) => { changeHandler(e) }} placeholder="Type here" />
+      <p>Product Description</p>
+      <input type="text" name="description" placeholder="Description" onChange={handleChange}  />
+      
       </div>
+      
+      {/* Category Dropdown */}
       <div className="addproduct-itemfield">
-        <p>Product description</p>
-        <input type="text" name="description" value={productDetails.description} onChange={(e) => { changeHandler(e) }} placeholder="Type here" />
+      <p>Category</p>
+      <select name="category" onChange={handleChange} className="add-product-selector" >
+        <option value="">Select</option>
+        <option value="women">Women</option>
+        <option value="men">Men</option>
+        <option value="kid">Kid</option>
+      </select>
       </div>
+
+      {/* Colour Dropdown */}
+
+      <div className="addproduct-itemfield">
+      <p>Colour</p>
+      <select name="colour" onChange={handleChange} className="add-product-selector" >
+        <option value="">Select</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="black">Black</option>
+        <option value="white">White</option>
+        <option value="orange">Orange</option>
+        <option value="pink">Pink</option>
+        <option value="purple">Purple</option>
+      </select>
+</div>
+      {/* Price Fields */}
       <div className="addproduct-price">
         <div className="addproduct-itemfield">
           <p>Price</p>
-          <input type="number" name="old_price" value={productDetails.old_price} onChange={(e) => { changeHandler(e) }} placeholder="Type here" />
-        </div>
-        <div className="addproduct-itemfield">
-          <p>Offer Price</p>
-          <input type="number" name="new_price" value={productDetails.new_price} onChange={(e) => { changeHandler(e) }} placeholder="Type here" />
-        </div>
-      </div>
+      <input type="number" name="new_price" placeholder="Discounted Price" onChange={handleChange} className="w-full p-2 border rounded" />
+      <input type="number" name="old_price" placeholder="Original Price" onChange={handleChange} className="w-full p-2 border rounded" />
+</div>
+</div>
+      {/* Dynamic Sizes Input */}
       <div className="addproduct-itemfield">
-        <p>Product category</p>
-        <select value={productDetails.category} name="category" className="add-product-selector" onChange={changeHandler}>
-          <option value="women">Women</option>
-          <option value="men">Men</option>
-          <option value="kid">Kid</option>
-        </select>
-        <p>Product Colour</p>
-        <select value={productDetails.colour} name="colour" className="add-product-selector" onChange={changeHandler}>
-          <option value="red">Red</option>
-          <option value="blue">Blue</option>
-          <option value="green">Green</option>
-          <option value="yellow">Yellow</option>
-          <option value="black">Black</option>
-          <option value="white">White</option>
-          <option value="orange">Orange</option>
-          <option value="pink">Pink</option>
-          <option value="purple">Purple</option>
-        </select>
-      </div>
-      <div className="addproduct-itemfield">
-    
-  </div>
-
-  <div className="addproduct-itemfield">
         <p>Sizes</p>
-        {productDetails.sizes.map((size, index) => (
-          <div key={index} className="size-quantity-field">
-            <select
+        {product.sizes.map((size, index) => (
+          <div key={index} className="flex space-x-2 items-center">
+            <input
+              type="text"
+              placeholder="Size"
               value={size.name}
-              name="name"
-              onChange={(e) => sizeChangeHandler(e, index)}
-            >
-              <option value="">Select size</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-            </select>
-            <div className="quantity-field">
-              <button type="button" onClick={() => decreaseQuantity(index)}>
-                -
+              onChange={(e) => handleSizeChange(index, "name", e.target.value)}
+              className="w-1/2 p-2 border rounded"
+            />
+            <input
+              type="number"
+              placeholder="Quantity"
+              value={size.quantity}
+              onChange={(e) => handleSizeChange(index, "quantity", e.target.value)}
+              className="w-1/2 p-2 border rounded"
+            />
+            {index > 0 && (
+              <button type="button" onClick={() => removeSizeField(index)} className="text-red-500">
+                ❌
               </button>
-              <input
-                type="number"
-                name="quantity"
-                value={size.quantity}
-                onChange={(e) => sizeChangeHandler(e, index)}
-                placeholder="0"
-                min="0"
-              />
-              <button type="button" onClick={() => increaseQuantity(index)}>
-                +
-              </button>
-            </div>
-            <button type="button" className="remove-button" onClick={() => removeSizeField(index)}>
-              Remove
-            </button>
+            )}
           </div>
         ))}
-        <button type="button" onClick={addSizeField}>
-          Add Size
+        <button type="button" onClick={addSizeField} className="text-blue-500">
+          + Add Size
         </button>
-      
-</div>
-
-<div className="addproduct-itemfield">
-        <p>Product image</p>
-        <label htmlFor="file-input">
-          <img className="addproduct-thumbnail-img" src={!image ? upload_area : URL.createObjectURL(image)} alt="" />
-        </label>
-        <input onChange={(e) => setImage(e.target.files[0])} type="file" name="image" id="file-input" accept="image/*" hidden />
       </div>
-      <button className="addproduct-btn" onClick={() => { AddProduct() }}>ADD</button>
-    </div>
-  );
-};
 
-export default AddProduct;
+      {/* Image Upload */}
+      <div className="addproduct-itemfield"><p>Product Image</p></div>
+      
+
+      <input type="file" multiple onChange={handleFileChange} className="w-full p-2 border rounded" />
+      <div className="addproduct-itemfield">
+      
+        {previewImages.map((src, idx) => (
+          <img key={idx} src={src} alt="Preview" className="addproduct-thumbnail-img" />
+        ))}
+      </div>
+
+      {/* Submit Button */}
+      <button type="submit" className="addproduct-btn">
+        Create Product
+      </button>
+    </form>
+  </div>
+  );
+}

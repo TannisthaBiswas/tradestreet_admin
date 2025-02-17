@@ -5,17 +5,19 @@ import AddProduct from "../Components/AddProduct/AddProduct";
 import { Route, Routes } from "react-router-dom";
 import ListProduct from "../Components/ListProduct/ListProduct";
 import OrderStatus from "../Components/OrderStatus/OrderStatus";
+import Dashboard from "../Components/Dashboard/dashboard";
 
 const Admin = () => {
 
   return (
     <div className="admin">
       <Sidebar />
+      <Dashboard />
       <Routes>
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/listproduct" element={<ListProduct />} />
         <Route path="/orderstatus" element={<OrderStatus/>}/>
-      </Routes>
+      </Routes>     
     </div>
   );
 };
