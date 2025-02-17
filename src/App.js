@@ -3,8 +3,8 @@ import Footer from "./Components/Footer/Footer";
 import Navbar from "./Components/Navbar/Navbar";
 import Admin from "./Pages/Admin";
 
-export const backend_url = 'http://localhost:4000';
-//'https://tradestreet-backend.onrender.com';
+export const backend_url = 'https://tradestreet-backend.onrender.com';
+//'http://localhost:4000';
 //
 export const currency = '₹';
 export const currencynew = 'INR';
