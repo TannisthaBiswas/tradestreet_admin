@@ -15,20 +15,27 @@
   margin-bottom: 20px;
 }
 
+/* Table container for responsive layout */
+.view-orders .table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Table styling */
 .view-orders table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .view-orders table th,
 .view-orders table td {
-  padding: 12px 15px;
+  padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  font-size: 16px; /* Default font size */
 }
 
 .view-orders table th {
@@ -37,10 +44,12 @@
   color: #333;
 }
 
+/* Hover effect for rows */
 .view-orders table tbody tr:hover {
   background: #f9f9f9;
 }
 
+/* Buttons & Select */
 .view-orders select {
   padding: 8px;
   border: 1px solid #ddd;
@@ -64,6 +73,7 @@
   background: #0056b3;
 }
 
+/* Success and Error Messages */
 .success-message {
   color: #28a745;
   margin-top: 10px;
@@ -74,20 +84,73 @@
   margin-top: 10px;
 }
 
-/* Responsive Styles */
-@media (max-width: 800px) {
+/* ✅ Fully Responsive Design */
+@media (max-width: 1024px) {
   .view-orders {
-    padding: 10px;
+    padding: 15px;
   }
 
   .view-orders table th,
   .view-orders table td {
     padding: 10px;
-    font-size: 12px;
+    font-size: 14px;
+  }
+
+  .view-orders select,
+  .view-orders button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .view-orders {
+    padding: 10px;
+  }
+
+  .view-orders .table-container {
+    width: 100%;
+  }
+
+  .view-orders table th,
+  .view-orders table td {
+    padding: 8px;
+    font-size: 12px; /* Smaller text */
   }
 
   .view-orders select,
   .view-orders button {
     font-size: 12px;
+    padding: 5px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-orders {
+    padding: 8px;
+  }
+
+  .view-orders h2 {
+    font-size: 18px;
+  }
+
+  .view-orders .table-container {
+    width: 100%;
+  }
+
+  .view-orders table {
+    font-size: 11px;
+  }
+
+  .view-orders table th,
+  .view-orders table td {
+    padding: 6px;
+    font-size: 10px; /* Smallest size for mobile */
+  }
+
+  .view-orders select,
+  .view-orders button {
+    font-size: 10px;
+    padding: 4px 6px;
   }
 }

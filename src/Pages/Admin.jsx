@@ -12,8 +12,8 @@ const Admin = () => {
   return (
     <div className="admin">
       <Sidebar />
-      <Dashboard />
       <Routes>
+      <Route path="/" element={<Dashboard />} /> 
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/listproduct" element={<ListProduct />} />
         <Route path="/orderstatus" element={<OrderStatus/>}/>

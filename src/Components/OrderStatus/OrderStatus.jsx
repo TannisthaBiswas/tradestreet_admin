@@ -34,6 +34,7 @@ const OrderStatus = () => {
               <th>User</th>
               <th>Total Amount</th>
               <th>Status</th>
+              <th>Payment</th>
               <th>Update Status</th>
             </tr>
           </thead>
@@ -44,6 +45,7 @@ const OrderStatus = () => {
                 <td>{order.userId?.name || 'Unknown'}</td>
                 <td>{currency}{order.totalAmount}</td>
                 <td>{order.orderStatus}</td>
+                <td>{order.paymentStatus}</td>
                 <td>
                   <UpdateOrderStatus orderId={order._id} fetchOrders={fetchOrders} />
                 </td>
